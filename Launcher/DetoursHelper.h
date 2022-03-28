@@ -4,4 +4,4 @@
 
 
 // Create process with Detours dll injection
-void DetrousCreateProcess(CString exeFileName, CString dllFileName, CString currentDirectory);
+void DetrousCreateProcess(CString exeFileName, CString params, CString dllFileName, CString currentDirectory);

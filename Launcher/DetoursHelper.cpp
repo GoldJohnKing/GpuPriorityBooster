@@ -6,9 +6,9 @@
 #include "detours.h" // This header file must be below <Windows.h>, or Detours wont know which architecture to use
 
 
-void DetrousCreateProcess(CString exeFileName, CString dllFileName, CString currentDirectory)
+void DetrousCreateProcess(CString exeFileName, CString params, CString dllFileName, CString currentDirectory)
 {
-    CString exeFilePath = currentDirectory + exeFileName;
+    CString exeFilePath = "\"" + currentDirectory + exeFileName + "\" " + params;
     CString dllFilePath = currentDirectory + dllFileName;
 
     OutputDebugString(exeFilePath.GetString());

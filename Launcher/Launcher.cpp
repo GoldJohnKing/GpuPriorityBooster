@@ -21,6 +21,7 @@ int main()
 
     CString exeFileName = RetrieveKeyValuePair(sectionName.GetString(), "Exe", "FoxTracker.exe", configFilePath.GetString());
     CString dllFileName = RetrieveKeyValuePair(sectionName.GetString(), "Dll", "GPUPriorityBoosterHelper.dll", configFilePath.GetString());
+    CString params = RetrieveKeyValuePair(sectionName.GetString(), "Params", "", configFilePath.GetString());
 
-    DetrousCreateProcess(exeFileName, dllFileName, currentDirectory);
+    DetrousCreateProcess(exeFileName, params, dllFileName, currentDirectory);
 }
