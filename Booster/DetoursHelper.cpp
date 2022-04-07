@@ -3,9 +3,9 @@
 #include "DetoursHelper.h"
 #include "PriorityHelper.h"
 
-#include <string>
-
 #include <Windows.h>
+
+#include <atlstr.h>
 
 #include <detours.h>
 
@@ -32,29 +32,25 @@ void unhook_func(void** _target, void* _my_fun)
 
 void* hook_api(const char* _dll_name, const char* _func_name, void* _my_func)
 {
-    UINT64 funcNameInt = (UINT64)_func_name;
-
     HMODULE module = GetModuleHandleA(_dll_name);
+
     if (NULL == module)
     {
-        std::string strPath = _dll_name;
-        std::size_t p = strPath.rfind('\\');
+        CString strPath = _dll_name;
+        int p = strPath.ReverseFind('\\');
 
-        if (p != std::string::npos)
+        if (-1 != p)
             module = LoadLibraryExA(_dll_name, NULL, LOAD_WITH_ALTERED_SEARCH_PATH);
         else
             module = LoadLibraryA(_dll_name);
 
-        if (NULL == module) {
+        if (NULL == module)
             return NULL;
-        }
     }
 
     void* res = (void*)GetProcAddress(module, _func_name);
-    if (NULL == res) {
-        UINT64 funcNameInt = (UINT64)_func_name;
+    if (NULL == res)
         return NULL;
-    }
 
     hook_func(&res, _my_func);
     return res;
