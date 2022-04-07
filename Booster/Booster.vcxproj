@@ -175,6 +175,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="D3D10Hook.h" />
     <ClInclude Include="D3D11Hook.h" />
     <ClInclude Include="DetoursHelper.h" />
     <ClInclude Include="framework.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="PrivilegeHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="D3D10Hook.cpp" />
     <ClCompile Include="D3D11Hook.cpp" />
     <ClCompile Include="DetoursHelper.cpp" />
     <ClCompile Include="dllmain.cpp" />

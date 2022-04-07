@@ -8,7 +8,7 @@
 void ElevatePrivilege()
 {
     const DWORD flags = TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY;
-    TOKEN_PRIVILEGES tp;
+    TOKEN_PRIVILEGES tp = {};
     HANDLE token;
     LUID val;
 

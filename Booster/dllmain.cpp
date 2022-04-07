@@ -1,7 +1,9 @@
 ﻿// dllmain.cpp : 定义 DLL 应用程序的入口点。
 #include "pch.h"
 
+#include "PrivilegeHelper.h"
 #include "PriorityHelper.h"
+#include "D3D10Hook.h"
 #include "D3D11Hook.h"
 
 
@@ -21,8 +23,11 @@ BOOL APIENTRY DllMain( HMODULE hModule,
         DisableThreadLibraryCalls(hModule);
         DetourRestoreAfterWith();
 
+        ElevatePrivilege();
+
         SetProcessPriorityClassToRealtime();
 
+        InitD3D10Hook();
         InitD3D11Hook();
     }
     case DLL_THREAD_ATTACH:

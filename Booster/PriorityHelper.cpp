@@ -9,22 +9,36 @@
 #include <bcrypt.h>
 
 #include <dxgi.h>
-#include <d3d11.h>
 
 
 void SetProcessPriorityClassToRealtime()
 {
-    ElevatePrivilege();
     SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 }
 
 void SetThreadPriorityToTimeCritical()
 {
-    ElevatePrivilege();
     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 }
 
-bool ElevatePriority(ID3D11Device* device)
+bool ElevateDxgiPriority(IUnknown* device)
+{
+    IDXGIDevice* dxgiDevice = nullptr;
+    device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+
+    HRESULT hr = dxgiDevice->SetGPUThreadPriority(7); // Highest priority is 7
+
+    dxgiDevice->Release();
+
+    if (FAILED(hr)) {
+        OutputDebugString("GJK SetGPUThreadPriority FAILED!");
+        return false;
+    }
+
+    return true;
+}
+
+bool ElevateDwmPriority()
 {
     typedef enum _D3DKMT_SCHEDULINGPRIORITYCLASS {
         D3DKMT_SCHEDULINGPRIORITYCLASS_IDLE,
@@ -35,19 +49,9 @@ bool ElevatePriority(ID3D11Device* device)
         D3DKMT_SCHEDULINGPRIORITYCLASS_REALTIME
     } D3DKMT_SCHEDULINGPRIORITYCLASS;
 
-    IDXGIDevice* dxgiDevice = nullptr;
-    device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
-    HRESULT hr = dxgiDevice->SetGPUThreadPriority(7); // Highest priority is 7
-    dxgiDevice->Release();
-    if (FAILED(hr)) {
-        OutputDebugString("GJK SetGPUThreadPriority FAILED!");
-        return false;
-    }
-
-    ElevatePrivilege();
-
-    HMODULE gdi32 = GetModuleHandleW(L"GDI32");
+    HMODULE gdi32 = GetModuleHandle("GDI32");
     if (!gdi32) {
+        OutputDebugString("GJK GetModuleHandle FAILED!");
         return false;
     }
 
@@ -65,4 +69,12 @@ bool ElevatePriority(ID3D11Device* device)
     }
 
     return true;
+}
+
+bool ElevatePriority(IUnknown* device)
+{
+    bool ret = ElevateDxgiPriority(device);
+    bool ret1 = ElevateDwmPriority();
+
+    return ret && ret1; // Prevent lazy evaluation of above functions
 }

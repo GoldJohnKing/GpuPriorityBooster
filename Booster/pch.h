@@ -14,6 +14,7 @@
 #include <atlstr.h>
 #include <bcrypt.h>
 #include <dxgi.h>
+#include <d3d10_1.h>
 #include <d3d11.h>
 
 #include <detours.h> // This header file must be below <Windows.h>, or Detours wont know which architecture to use
